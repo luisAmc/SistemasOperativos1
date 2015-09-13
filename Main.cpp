@@ -8,6 +8,7 @@ int menu();
 void *cmdMkDirThread(void *);
 void *cmdRmDirThread(void *);
 void *cmdRmFileThread(void *);
+void *cmdRmDirRThread(void *);
 int cmd_mkDir(string);
 int cmd_rmDir(string);
 int cmd_rmDirR(string);
@@ -50,17 +51,24 @@ int main(int argc, char const *argv[]) {
 			case 3:
 			{
 				//rmDir -R
+				string folder_path = "";
+				cout << "\nIngrese la direccion del directorio a eliminiar: " << endl;
+				getline(cin, folder_path);
+				getline(cin, folder_path);
+				pthread_t *rmDirR = new pthread_t;
+				pthread_create(rmDirR, NULL, cmdRmDirRThread, (void *)(&folder_path));
+				pthread_join(*rmDirR, NULL);
 				break;
 			}
 			case 4:
 			{
 				//rm
-				string file_path = "";
+				string folder_path = "";
 				cout << "\nIngrese la direccion del archivo a eliminiar: " << endl;
-				getline(cin, file_path);
-				getline(cin, file_path);
+				getline(cin, folder_path);
+				getline(cin, folder_path);
 				pthread_t *rmFile = new pthread_t;
-				pthread_create(rmFile, NULL, cmdRmFileThread, (void *)(&file_path));
+				pthread_create(rmFile, NULL, cmdRmFileThread, (void *)(&folder_path));
 				pthread_join(*rmFile, NULL);
 				break;
 			}
@@ -125,5 +133,20 @@ int cmd_rmFile(string path) {
 		execv("./cmd_rmFile", arg);
 		return 0;
 	}	
+	return 1;
+}
+
+void *cmdRmDirRThread(void *p) {
+	string *folder_to_delete_recursively = (string *)p;
+	if (!cmd_rmDirR(*folder_to_delete_recursively))
+		pthread_exit(NULL);
+}
+
+int cmd_rmDirR(string path) {
+	char *arg[] = {(char *)path.c_str(), (char *)0};
+	if (!fork()) {
+		execv("./cmd_rmDirR", arg);
+		return 0;
+	}
 	return 1;
 }

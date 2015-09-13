@@ -4,7 +4,7 @@
 int main(int argc, char const *argv[]) {
 	if (rmdir(argv[0]) == 0)
 		//std::cout << "\nDirectorio eliminado exitosamente\n" << std::endl;
-	else
+	//else
 		//std::cout << "\nHubo un error en la eliminacion del directorio\n" << std::endl;
 	return 0;
 }
