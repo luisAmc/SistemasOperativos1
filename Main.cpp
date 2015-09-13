@@ -7,9 +7,11 @@ using namespace std;
 int menu();
 void *cmdMkDirThread(void *);
 void *cmdRmDirThread(void *);
+void *cmdRmFileThread(void *);
 int cmd_mkDir(string);
 int cmd_rmDir(string);
 int cmd_rmDirR(string);
+int cmd_rmFile(string);
 
 int main(int argc, char const *argv[]) {
 	bool keep_going = true;
@@ -23,6 +25,7 @@ int main(int argc, char const *argv[]) {
 			}
 			case 1:
 			{
+				//mkDir
 				string folder_path = "";
 				cout << "\nIngrese la direccion del nuevo directorio: " << endl;
 				getline(cin, folder_path);
@@ -34,13 +37,31 @@ int main(int argc, char const *argv[]) {
 			}
 			case 2:
 			{
+				//rmDir
 				string folder_path = "";
-				cout << "\nIngrese la direccion del directorio a borrar (El directorio tiene que estar vacio): " << endl;
+				cout << "\nIngrese la direccion del directorio a eliminiar (El directorio tiene que estar vacio): " << endl;
 				getline(cin, folder_path);
 				getline(cin, folder_path);
 				pthread_t *rmDir = new pthread_t;
 				pthread_create(rmDir, NULL, cmdRmDirThread, (void *)(&folder_path));
 				pthread_join(*rmDir, NULL);
+				break;
+			}
+			case 3:
+			{
+				//rmDir -R
+				break;
+			}
+			case 4:
+			{
+				//rm
+				string file_path = "";
+				cout << "\nIngrese la direccion del archivo a eliminiar: " << endl;
+				getline(cin, file_path);
+				getline(cin, file_path);
+				pthread_t *rmFile = new pthread_t;
+				pthread_create(rmFile, NULL, cmdRmFileThread, (void *)(&file_path));
+				pthread_join(*rmFile, NULL);
 				break;
 			}
 		}
@@ -70,7 +91,7 @@ void *cmdMkDirThread(void *p) {
 int cmd_mkDir(string path) {
 	//char *arg[] = {(char *)("./" + path).c_str(), (char *)0};
 	char *arg[] = {(char *)path.c_str(), (char *)0};
-	if (fork() == 0) {
+	if (!fork()) {
 		execv("./cmd_mkDir", arg);
 		return 0;
 	}
@@ -85,9 +106,24 @@ void *cmdRmDirThread(void *p) {
 
 int cmd_rmDir(string path) {
 	char *arg[] = {(char *)path.c_str(), (char *)0};
-	if (fork() == 0) {
+	if (!fork()) {
 		execv("./cmd_rmDir", arg);
 		return 0;
 	}
+	return 1;
+}
+
+void *cmdRmFileThread(void *p) {
+	string *file_to_delete = (string *)p;
+	if (!cmd_rmFile(*file_to_delete))
+		pthread_exit(NULL);
+}
+
+int cmd_rmFile(string path) {
+	char *arg[] = {(char *)path.c_str(), (char *)0};
+	if (!fork()) {
+		execv("./cmd_rmFile", arg);
+		return 0;
+	}	
 	return 1;
 }

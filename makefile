@@ -1,4 +1,4 @@
-Main: Main.o cmd_mkDir cmd_rmDir
+Main: Main.o cmd_mkDir cmd_rmDir cmd_rmFile
 	g++ Main.o -o Main -lpthread
 
 Main.o: Main.cpp
@@ -16,8 +16,14 @@ cmd_rmDir: cmd_rmDir.o
 cmd_rmDir.o: cmd_rmDir.cpp
 	g++ -c cmd_rmDir.cpp
 
+cmd_rmFile: cmd_rmFile.o
+	g++ cmd_rmFile.o -o cmd_rmFile
+
+cmd_rmFile.o: cmd_rmFile.cpp
+	g++ -c cmd_rmFile.cpp
+
 clean:
 	rm *.o
 
 clean all:
-	rm *.o Main cmd_mkDir cmd_rmDir
+	rm *.o Main cmd_mkDir cmd_rmDir cmd_rmFile
