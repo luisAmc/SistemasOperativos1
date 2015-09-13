@@ -1,0 +1,15 @@
+Main: Main.o cat ln
+	g++ main.cpp -o Main
+Main.o: main.cpp
+	g++ -c main.cpp
+cat:	cat.o
+	g++ cat.cpp -o cat
+cat.o:	cat.cpp
+	g++ -c cat.cpp
+ln:	ln.o
+	g++ ln.cpp -o ln
+ln.o:	ln.cpp
+	g++ -c ln.cpp
+	
+clean:
+	rm *.o
