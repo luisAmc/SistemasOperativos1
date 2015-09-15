@@ -1,7 +1,7 @@
-Main: Main.o cat ln
-	g++ main.cpp -o Main
-Main.o: main.cpp
-	g++ -c main.cpp
+Main: Main_BARAHONA.o cat ln
+	g++ main_BARAHONA.cpp -o Main
+Main_BARAHONA.o: main_BARAHONA.cpp
+	g++ -c main_BARAHONA.cpp
 cat:	cat.o
 	g++ cat.cpp -o cat
 cat.o:	cat.cpp
