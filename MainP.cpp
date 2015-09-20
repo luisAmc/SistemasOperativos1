@@ -7,10 +7,13 @@
 #include <fstream>
 #include <unistd.h>
 #include <errno.h>  
+#include <dirent.h>
 #include <stdlib.h> 
 using namespace std;
+char RUN_DIR[FILENAME_MAX];
 const string COMANDOS[] = {"cd","chmod","uname","kill","ln","cat","ps","mkdir","ls","rmdir","rm"};
 const int COMANDOS_SIZE = 11;
+
 
 int checkCommand(string);
 vector<string> split(string str, char delimiter);
@@ -22,7 +25,10 @@ void *ln(vector<string>);
 void *cmd_mkDir(vector<string>);
 void *cmd_rmDir(vector<string>);
 void *cmd_rmFile(vector<string>);
+void *ps(vector<string>,string);
 int main(int argc, char const *argv[]){
+	getcwd(RUN_DIR,sizeof(RUN_DIR));
+	cout << RUN_DIR << endl;
 	while(true){
 		cout<<"MyBash>";
 		char COM[256];
@@ -36,24 +42,37 @@ int main(int argc, char const *argv[]){
 		if ((indexComando = checkCommand(ComandoVector[0])) != -1){
 			if (COMANDOS[indexComando] == "cd"){
 				cd(ComandoVector);
+				//cout << endl;
 			}else if (COMANDOS[indexComando] == "chmod"){
 				chmod(ComandoVector);
+				//cout << endl;
 			}else if(COMANDOS[indexComando]=="uname"){
 				uname(ComandoVector);
+				//cout << endl;
 			}else if (COMANDOS[indexComando] == "kill"){
 				cout<<"No se que pedales por aqui"<<endl;
+				//cout << endl;
 			}else if (COMANDOS[indexComando] == "cat"){
 				cat(ComandoVector);
+				//cout << endl;
 			}else if (COMANDOS[indexComando] == "ln"){
 				ln(ComandoVector);
+				//cout << endl;
 			}else if(COMANDOS[indexComando] == "mkdir"){
 				cmd_mkDir(ComandoVector);
+				//cout << endl;
 			}else if(COMANDOS[indexComando] == "rmdir"){
 				cmd_rmDir(ComandoVector);
+				//cout << endl;
 			}else if(COMANDOS[indexComando] == "rm"){
 				cmd_rmFile(ComandoVector);
+				//cout << endl;
 			}else if(COMANDOS[indexComando] == "ls"){
 				system ("ls -l");
+				//cout << endl;
+			}else if(COMANDOS[indexComando] == "ps"){
+				ps(ComandoVector,RUN_DIR);
+				//cout << endl;
 			}
 		}else{
 			cout << "COMANDO NO ENCONTRADO " << endl;
@@ -106,7 +125,9 @@ void *cd(vector<string> ParseComando){
 		if(ParseComando.size()==3){
 			char *arg[] = {(char *)ParseComando[1].c_str(),(char *)ParseComando[2].c_str(), (char *)0}; 
 			if(!fork()){
-				execv("/home/carlos/SistemasOperativosP/chmod",arg);
+				string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/chmod";
+				execv(EXEC_COMMAND.c_str(),arg);
 			}
 		}
 	}
@@ -114,25 +135,33 @@ void *cd(vector<string> ParseComando){
 		if(ParseComando.size()==2){
 			char *arg[] = {(char *)ParseComando[1].c_str(), (char *)0};
 			if (!fork()){
-				execv("/home/carlos/SistemasOperativosP/uname", arg);
+				string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/uname";
+				execv(EXEC_COMMAND.c_str(),arg);
 			}
 		}
 		if(ParseComando.size()==3){
 			char *arg[] = {(char *)ParseComando[1].c_str(),(char *)ParseComando[2].c_str(), (char *)0};
 			if (!fork()){
-				execv("/home/carlos/SistemasOperativosP/uname", arg);
+				string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/uname";
+				execv(EXEC_COMMAND.c_str(),arg);
 			}
 		}
 		if(ParseComando.size()==4){
 			char *arg[] = {(char *)ParseComando[1].c_str(),(char *)ParseComando[2].c_str(),(char *)ParseComando[3].c_str(), (char *)0};
 			if (!fork()){
-				execv("/home/carlos/SistemasOperativosP/uname", arg);
+				string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/uname";
+				execv(EXEC_COMMAND.c_str(),arg);
 			}
 		}
 		if(ParseComando.size()==5){
 			char *arg[] = {(char *)ParseComando[1].c_str(),(char *)ParseComando[2].c_str(),(char *)ParseComando[3].c_str(), (char *)ParseComando[4].c_str(),(char *)0};
 			if (!fork()){
-				execv("/home/carlos/SistemasOperativosP/uname", arg);
+				string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/uname";
+				execv(EXEC_COMMAND.c_str(),arg);
 			}
 		}
 
@@ -142,11 +171,15 @@ void *cd(vector<string> ParseComando){
 		if (ParseComando.size() == 2){
 			char *arg[] = {(char *)ParseComando[1].c_str(), (char *)0};
 			if (!fork()){
-				execv("/home/carlos/SistemasOperativos1/UpdateLast/cat", arg);
+				string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/cat";
+				execv(EXEC_COMMAND.c_str(),arg);
 			}
 		}else{
 			if (!fork()){
-				execv("/home/carlos/SistemasOperativos1/UpdateLast/cat", NULL);
+				string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/cat";
+				execv(EXEC_COMMAND.c_str(),NULL);
 			}
 		}
 	}
@@ -155,21 +188,29 @@ void *cd(vector<string> ParseComando){
 		if (ParseComando.size() == 2){
 			char *arg[] = {(char *)ParseComando[1].c_str(), (char *)0};
 			if (!fork()){
-				execv("/home/carlos/SistemasOperativos1/UpdateLast/ln", arg);
+				string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/ln";
+				execv(EXEC_COMMAND.c_str(),arg);
 			}
 		}else if (ParseComando.size() == 3){
 			char *arg[] = {(char *)ParseComando[1].c_str(),(char *)ParseComando[2].c_str(), (char *)0};
 			if (!fork()){
-				execv("/home/carlos/SistemasOperativos1/UpdateLast/ln", arg);
+				string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/ln";
+				execv(EXEC_COMMAND.c_str(),arg);
 			}
 		}else if (ParseComando.size() == 4){
 			char *arg[] = {(char *)ParseComando[1].c_str(),(char *)ParseComando[2].c_str(),(char *)ParseComando[3].c_str(), (char *)0};
 			if (!fork()){
-				execv("/home/carlos/SistemasOperativos1/UpdateLast/ln", arg);
+				string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/ln";
+				execv(EXEC_COMMAND.c_str(),arg);
 			}
 		}else{
 			if (!fork()){
-				execv("/home/carlos/SistemasOperativos1/UpdateLast/ln", NULL);
+				string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/ln";
+				execv(EXEC_COMMAND.c_str(),NULL);
 			}
 		}
 	}
@@ -180,7 +221,9 @@ void *cd(vector<string> ParseComando){
 
 			char *arg[] = {(char *)ParseComando[1].c_str(), (char *)0};
 			if (!fork()) {
-				execv("/home/carlos/SistemasOperativos1/UpdateLast/cmd_mkDir", arg);
+								string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/cmd_mkDir";
+				execv(EXEC_COMMAND.c_str(),arg);
 
 			}
 		}
@@ -190,7 +233,9 @@ void *cd(vector<string> ParseComando){
 		if(ParseComando.size()==2){
 			char *arg[] = {(char *)ParseComando[1].c_str(), (char *)0};
 			if (!fork()) {
-				execv("/home/carlos/SistemasOperativos1/UpdateLast/cmd_rmDir", arg);
+				string EXEC_COMMAND(RUN_DIR);
+				EXEC_COMMAND += "/cmd_rmDir";
+				execv(EXEC_COMMAND.c_str(),arg);
 
 			}
 		}else if(ParseComando.size()==3){
@@ -198,19 +243,34 @@ void *cd(vector<string> ParseComando){
 				if(opcion=="-R"){
 				char *arg[] = {(char *)ParseComando[2].c_str(), (char *)0};
 				if (!fork()) {
-					execv("/home/carlos/SistemasOperativos1/UpdateLast/cmd_rmDirR", arg);
+					string EXEC_COMMAND(RUN_DIR);
+					EXEC_COMMAND += "/cmd_rmDirR";
+					execv(EXEC_COMMAND.c_str(),arg);
 
 				}
 			}
 		}
 
 	}
-	void *cmd_rmFile(vector<string> ParseComando) {
+void *cmd_rmFile(vector<string> ParseComando) {
 	if(ParseComando.size()==2){
-	char *arg[] = {(char *)ParseComando[1].c_str(), (char *)0};
-	if (!fork()) {
-		execv("/home/carlos/SistemasOperativos1/UpdateLast/cmd_rmFile", arg);
-		
+		char *arg[] = {(char *)ParseComando[1].c_str(), (char *)0};
+		if (!fork()) {
+			string EXEC_COMMAND(RUN_DIR);
+			EXEC_COMMAND += "/cmd_rmFile";
+			execv(EXEC_COMMAND.c_str(),arg);
+				
+		}	
+	}
+}
+
+void *ps(vector<string> ParseComando, string RUN_DIR){
+	if(ParseComando.size()==1){
+		char *arg[] = {(char *)RUN_DIR.c_str(), (char *)0};
+		if (!fork()) {
+			string EXEC_COMMAND(RUN_DIR);
+			EXEC_COMMAND += "/ps";
+			execv(EXEC_COMMAND.c_str(),arg);
+		}
 	}	
-	}
-	}
+}

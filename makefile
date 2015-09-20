@@ -1,4 +1,4 @@
-Main: MainP.o chmod uname cat ln cmd_mkDir cmd_rmDir cmd_rmFile cmd_rmDirR
+Main: MainP.o chmod uname cat ln cmd_mkDir cmd_rmDir cmd_rmFile cmd_rmDirR ps
 	g++ MainP.cpp -o Main
 MainP.o: MainP.cpp
 	g++ -c MainP.cpp
@@ -40,5 +40,10 @@ cmd_rmFile: cmd_rmFile.o
 
 cmd_rmFile.o: cmd_rmFile.cpp
 	g++ -c cmd_rmFile.cpp
+
+ps:	ps.o
+	g++ ps.cpp -o ps
+ps.o:
+	g++ -c ps.cpp
 clean:
 	rm *.o

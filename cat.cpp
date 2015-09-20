@@ -25,9 +25,11 @@ int main(int argc, char const *argv[])
 		}
 	}else{
 		char LINE[256];
-		while (cin.getline(LINE,256)){
+		cout << "ENTER" << endl;
+		cin.getline(LINE,256);
+		do{
 			cout << LINE << endl;
-		}
+		}while ((cin >> LINE));
 	}
 	//cout << endl;
 	return 0;
