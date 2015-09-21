@@ -26,6 +26,7 @@ void *cmd_mkDir(vector<string>);
 void *cmd_rmDir(vector<string>);
 void *cmd_rmFile(vector<string>);
 void *ps(vector<string>,string);
+void *kill(vector<string>);
 int main(int argc, char const *argv[]){
 	getcwd(RUN_DIR,sizeof(RUN_DIR));
 	cout << RUN_DIR << endl;
@@ -50,7 +51,7 @@ int main(int argc, char const *argv[]){
 				uname(ComandoVector);
 				//cout << endl;
 			}else if (COMANDOS[indexComando] == "kill"){
-				cout<<"No se que pedales por aqui"<<endl;
+				kill(ComandoVector);
 				//cout << endl;
 			}else if (COMANDOS[indexComando] == "cat"){
 				cat(ComandoVector);
@@ -273,4 +274,14 @@ void *ps(vector<string> ParseComando, string RUN_DIR){
 			execv(EXEC_COMMAND.c_str(),arg);
 		}
 	}	
+}
+void *kill(vector<string> ParseComando){
+	if(ParseComando.size()==3){
+		char *arg[] = {(char *)ParseComando[2].c_str(), (char *)0};
+		if (!fork()) {
+			string EXEC_COMMAND(RUN_DIR);
+			EXEC_COMMAND += "/kill";
+			execv(EXEC_COMMAND.c_str(),arg);
+		}
+	}
 }
