@@ -1,4 +1,4 @@
-Main: MainP.o chmod uname cat ln cmd_mkDir cmd_rmDir cmd_rmFile cmd_rmDirR ps kill cmd_redirect
+Main: MainP.o chmod uname cat ln cmd_mkDir cmd_rmDir cmd_rmFile cmd_rmDirR ps kill cmd_redirect cmd_ls
 	g++ MainP.cpp -o Main 
 MainP.o: MainP.cpp
 	g++ -c MainP.cpp
@@ -59,8 +59,11 @@ cmd_redirect: cmd_redirect.o
 cmd_redirect.o:
 	g++ -c cmd_redirect.cpp
 
-clean:
-	rm *.o Main uname chmod cat ln cmd_rmFile cmd_rmDir cmd_mkDir cmd_rmDirR ps kill cmd_redirect
+cmd_ls: cmd_ls.o
+	g++ cmd_ls.cpp -o cmd_ls
 
-gitclean:
-	git rm *.o Main uname chmod cat ln cmd_rmFile cmd_rmDir cmd_mkDir cmd_rmDirR ps kill cmd_redirect
+cmd_ls.o:
+	g++ -c cmd_ls.cpp
+
+clean all:
+	rm *.o Main chmod uname cat ln cmd_mkDir cmd_rmDir cmd_rmDirR cmd_rmFile ps kill cmd_ls

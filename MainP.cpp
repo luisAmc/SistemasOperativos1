@@ -29,6 +29,7 @@ void *cmd_rmFile(vector<string>);
 void *ps(vector<string>,string);
 void *kill(vector<string>);
 void *redireccionamiento(vector<string>);
+void *cmd_ls(vector<string>);
 
 int main(int argc, char const *argv[]){
 	getcwd(RUN_DIR,sizeof(RUN_DIR));
@@ -83,7 +84,10 @@ int main(int argc, char const *argv[]){
 					cmd_rmFile(ComandoVector);
 				//cout << endl;
 				}else if(COMANDOS[indexComando] == "ls"){
-					system ("ls -l");
+					cmd_ls(ComandoVector);
+					int status = 0;
+					while((wait(&status)) != -1);
+					//system ("ls -l");
 				}else if(COMANDOS[indexComando] == "ps"){
 					ps(ComandoVector,RUN_DIR);
 					int status = 0;
@@ -116,6 +120,18 @@ vector<string> split(string str, char delimiter) {
 	}
 
 	return internal;
+}
+
+void *cmd_ls(vector<string> ParseComando) {
+	if (ParseComando.size() == 1)
+		ParseComando.push_back("./");
+	char *arg[] = {(char *)ParseComando[1].c_str(), (char *)0};
+	if (!fork()) {
+		string EXEC_COMMAND(RUN_DIR);
+		EXEC_COMMAND += "/cmd_ls";
+		execv(EXEC_COMMAND.c_str(),arg);
+
+	}
 }
 
 void *redireccionamiento(vector<string> ParseComando) {
