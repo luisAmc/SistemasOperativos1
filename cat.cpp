@@ -1,11 +1,6 @@
 #include <iostream>
-#include <vector>
-#include <stdio.h>
 #include <string>
-#include <string.h>
-#include <sstream>
 #include <fstream>
-#include <unistd.h>
 
 using namespace std;
 
@@ -24,12 +19,11 @@ int main(int argc, char const *argv[])
 			cout << "ERROR AL ABRIR ARCHIVO " << argv[0] << endl;
 		}
 	}else{
-		char LINE[256];
-		cout << "ENTER" << endl;
-		cin.getline(LINE,256);
-		do{
+		string LINE;
+		//cout << "ENTER" << endl;
+		while (getline(cin,LINE)){
 			cout << LINE << endl;
-		}while ((cin >> LINE));
+		}
 	}
 	//cout << endl;
 	return 0;

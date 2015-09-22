@@ -50,4 +50,8 @@ kill:	kill.o
 kill.o:
 	g++ -c kill.cpp
 clean:
-	rm *.o
+	rm *.o Main uname chmod cat ln cmd_rmFile cmd_rmDir cmd_mkDir cmd_rmDirR ps kill
+
+gitclean:
+	git rm *.o Main uname chmod cat ln cmd_rmFile cmd_rmDir cmd_mkDir cmd_rmDirR ps kill
+

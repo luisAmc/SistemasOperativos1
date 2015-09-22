@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <errno.h>  
 #include <dirent.h>
 #include <stdlib.h> 
@@ -55,6 +56,8 @@ int main(int argc, char const *argv[]){
 				//cout << endl;
 			}else if (COMANDOS[indexComando] == "cat"){
 				cat(ComandoVector);
+				int status = 0;
+				while((wait(&status)) != -1);
 				//cout << endl;
 			}else if (COMANDOS[indexComando] == "ln"){
 				ln(ComandoVector);
@@ -73,6 +76,8 @@ int main(int argc, char const *argv[]){
 				//cout << endl;
 			}else if(COMANDOS[indexComando] == "ps"){
 				ps(ComandoVector,RUN_DIR);
+				int status = 0;
+				while((wait(&status)) != -1);
 				//cout << endl;
 			}
 		}else{
