@@ -29,7 +29,9 @@ void *cmd_rmFile(vector<string>);
 void *ps(vector<string>,string);
 void *kill(vector<string>);
 void *redireccionamiento(vector<string>);
+void *redireccionamiento_append(vector<string>);
 void *cmd_ls(vector<string>);
+void *pipes(vector<string>);
 
 int main(int argc, char const *argv[]){
 	getcwd(RUN_DIR,sizeof(RUN_DIR));
@@ -45,13 +47,26 @@ int main(int argc, char const *argv[]){
 		}
 
 		string comando = COM;
-		if (comando.find(">") != string::npos) {
+		size_t found;
+		if ((found = comando.find("|")) != string::npos) {
+			//cout << " >> " << endl;
+			vector<string> data = split(comando, '|');
+			pipes(data);
+			int status = 0;
+			while((wait(&status)) != -1);
+		} else if ((found = comando.find(">>")) != string::npos) {
+			//cout << " >> " << endl;
+			comando.replace(found,2,">");
+			vector<string> data = split(comando, '>');
+			redireccionamiento_append(data);
+			int status = 0;
+			while((wait(&status)) != -1);
+		} else if (comando.find(">") != string::npos) {
 			vector<string> data = split(comando, '>');
 			redireccionamiento(data);
 			int status = 0;
 			while((wait(&status)) != -1);
 		} else {
-
 			int indexComando;
 			if ((indexComando = checkCommand(ComandoVector[0])) != -1){
 				if (COMANDOS[indexComando] == "cd"){
@@ -143,6 +158,24 @@ void *redireccionamiento(vector<string> ParseComando) {
 	}
 }
 
+void *redireccionamiento_append(vector<string> ParseComando) {
+	char *arg[] = {(char *)ParseComando[0].c_str(), (char *)ParseComando[1].c_str(), (char *)0};
+	if (!fork()) {
+		string EXEC_COMMAND(RUN_DIR);
+		EXEC_COMMAND += "/redirect_append";
+		execv(EXEC_COMMAND.c_str(), arg);
+	}
+}
+
+void *pipes(vector<string> ParseComando) {
+	char *arg[] = {(char *)ParseComando[0].c_str(), (char *)ParseComando[1].c_str(),(char *)RUN_DIR, (char *)0};
+	if (!fork()) {
+		string EXEC_COMMAND(RUN_DIR);
+		EXEC_COMMAND += "/pipes";
+		execv(EXEC_COMMAND.c_str(), arg);
+	}
+}
+
 void *cd(vector<string> ParseComando){
 	if(ParseComando.size()==2){
 		if(chdir((char *)ParseComando[1].c_str())==-1){
@@ -150,9 +183,10 @@ void *cd(vector<string> ParseComando){
 			printf ("cd failed - %s\n", strerror (errno)); 
 		}else {  
 
-			printf ("chdir done !!!\n");  
+			/*printf ("chdir done !!!\n");  
 			printf ("directory content of '%s'\n\n", ((char *)ParseComando[1].c_str()));  
 			system ("ls -l");
+			*/
 		}
 	/*char *arg[]={(char *)ParseComando[1].c_str(),(char *)0};
 	if(!fork()){

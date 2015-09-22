@@ -1,4 +1,4 @@
-Main: MainP.o chmod uname cat ln cmd_mkDir cmd_rmDir cmd_rmFile cmd_rmDirR ps kill cmd_redirect cmd_ls
+Main: MainP.o chmod uname cat ln cmd_mkDir cmd_rmDir cmd_rmFile cmd_rmDirR ps kill cmd_redirect cmd_ls redirect_append pipes
 	g++ MainP.cpp -o Main 
 MainP.o: MainP.cpp
 	g++ -c MainP.cpp
@@ -65,5 +65,17 @@ cmd_ls: cmd_ls.o
 cmd_ls.o:
 	g++ -c cmd_ls.cpp
 
+redirect_append: redirect_append.o
+	g++ cmd_redirect_append.cpp -o redirect_append
+
+redirect_append.o:
+	g++ -c cmd_redirect_append.cpp
+
+pipes: pipes.o
+	g++ pipes.cpp -o pipes
+	
+pipes.o:
+	g++ -c pipes.cpp
+
 clean all:
-	rm *.o Main chmod uname cat ln cmd_mkDir cmd_rmDir cmd_rmDirR cmd_rmFile ps kill cmd_ls
+	rm *.o Main chmod uname cat ln cmd_mkDir cmd_rmDir cmd_rmDirR cmd_rmFile ps kill cmd_ls redirect_append pipes
