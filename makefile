@@ -1,5 +1,5 @@
-Main: MainP.o chmod uname cat ln cmd_mkDir cmd_rmDir cmd_rmFile cmd_rmDirR ps kill
-	g++ MainP.cpp -o Main
+Main: MainP.o chmod uname cat ln cmd_mkDir cmd_rmDir cmd_rmFile cmd_rmDirR ps kill cmd_redirect
+	g++ MainP.cpp -o Main 
 MainP.o: MainP.cpp
 	g++ -c MainP.cpp
 chmod: chmod.o
@@ -43,11 +43,24 @@ cmd_rmFile.o: cmd_rmFile.cpp
 
 ps:	ps.o
 	g++ ps.cpp -o ps
+
 ps.o:
 	g++ -c ps.cpp
+
 kill:	kill.o
 	g++ kill.cpp -o kill
+
 kill.o:
 	g++ -c kill.cpp
+
+cmd_redirect: cmd_redirect.o
+	g++ cmd_redirect.cpp -o cmd_redirect
+
+cmd_redirect.o:
+	g++ -c cmd_redirect.cpp
+
 clean:
 	rm *.o
+
+clean all:
+	rm *.o Main chmod uname cat ln cmd_mkDir cmd_rmDir cmd_rmDirR cmd_rmFile ps kill
